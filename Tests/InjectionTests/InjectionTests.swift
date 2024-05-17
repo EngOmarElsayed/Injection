@@ -12,7 +12,7 @@
 //SOFTWARE.
 
 import XCTest
-@testable import Injection
+import Injection
 
 final class InjectionTests: XCTestCase {
     @Injected(\.networkProvider) fileprivate var network: Network
