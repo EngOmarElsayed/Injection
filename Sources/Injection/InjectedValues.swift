@@ -26,13 +26,13 @@ public struct InjectedValues {
     private static var current = InjectedValues()
     
     /// This is a static subscript to read and update the currentValue of the ``InjectionKey``.
-    static subscript<K>(key: K.Type) -> K.Value where K: InjectionKey {
+    public static subscript<K>(key: K.Type) -> K.Value where K: InjectionKey {
         get { key.currentValue }
         set { key.currentValue = newValue }
     }
     
     /// This is a static subscript to reference and update the dependencies directly.
-    static subscript<T>(_ keyPath: WritableKeyPath<InjectedValues, T>) -> T {
+    public static subscript<T>(_ keyPath: WritableKeyPath<InjectedValues, T>) -> T {
         get { current[keyPath: keyPath] }
         set { current[keyPath: keyPath] = newValue }
     }
