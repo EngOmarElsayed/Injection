@@ -79,7 +79,7 @@ struct Garage {
 }
 ```
 
-And that's it simple right 🚀.
+And that's it, simple right 🚀.
 
 > [!NOTE]  
 > When ever you call the `@Injected` you will have the same instance throught the life cycle of the app.
@@ -87,17 +87,41 @@ And that's it simple right 🚀.
 
 > [!NOTE]  
 > Plus you can easily change the instance by writing:
+> 
 > ```swift
 > let garage = Garage()
 > garage.ducati = Ducati()
->
 > //OR
->InjectedValues[\.ducatiProvider] = Ducati()
+> InjectedValues[\.ducatiProvider] = Ducati()
 > ```
 > Using the `InjectedValues` static subscript also affects already injected properties.
 
 
 ## Testing <a name="section-2"></a>
+Testing your code is more easier than you think, you will just have to change the injected properties with a mock one using `InjectedValues` static subscript, like so:
+
+```swift
+final class MotorBikeTests: XCTestCase {
+    override func setUp() {
+        InjectedValues[\.ducatiProvider] = DuctiMock()
+    }
+    
+    func test() {
+        let garge = Garage()
+        
+        let result = garge.move()
+        
+        XCTAssertEqual(10, result)
+    }
+}
+
+class DuctiMock: MotorBike {
+    func move() -> Int {
+        return 10
+    }
+}
+```
+that's it for how to test your injected properties. Easey right ? 😎
 
 ## Resources <a name="resources"></a>
 
