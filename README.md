@@ -35,13 +35,66 @@ Alternatively, navigate to the top section labeled 'Files' and click on 'Add Pac
 
 
 ## How to use <a name="section-1"></a>
+Let's say we have a protocol called `MotorBike` (why motorBike because I love them 😍😅) that contains a funcation called `move`:
 
+```swift
+protocol MotorBike {
+    func move() -> Int
+}
+```
+And there is a struct called `Ducati` that conforms to `MotorBike`:
+
+```swift
+struct Ducati: MotorBike {
+   func move() -> Int {
+       return 5
+   }
+}
+```
+
+At this point we want to inject this object to another object using dependency injection design pattern to do so, the first step is to create a key (like the `@Environment`):
+
+```swift
+private struct DucatiKey: InjectionKey {
+   static var currentValue: MotorBike = Ducati()
+}
+```
+
+Then you will add this key to the `InjectedValues` struct:
+
+```swift
+extension InjectedValues {
+    var ducatiProvider: MotorBike {
+       get { Self[DucatiKey.self] }
+       set { Self[DucatiKey.self] = newValue }
+   }
+}
+```
+
+To be able to use it, you will just write this where ever you need it:
+
+```swift
+struct Garage {
+@Injected(\.ducatiProvider) var ducati: MotorBike
+}
+```
+
+And that's it simple right 🚀.
 
 > [!NOTE]  
-> You can also store optional values just like that:
+> When ever you call the `@Injected` you will have the same instance throught the life cycle of the app.
+> To prevent any side effects and weird outcomes from happening due to inconsistent dependency references.
+
+> [!NOTE]  
+> Plus you can easily change the instance by writing:
 > ```swift
-> @UserDefaults(key: "previewShown") var previewShown: Bool?
+> let garage = Garage()
+> garage.ducati = Ducati()
+>
+> //OR
+>InjectedValues[\.ducatiProvider] = Ducati()
 > ```
+> Using the `InjectedValues` static subscript also affects already injected properties.
 
 
 ## Testing <a name="section-2"></a>
