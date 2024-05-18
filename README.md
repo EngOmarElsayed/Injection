@@ -124,6 +124,10 @@ class DuctiMock: MotorBike {
 that's it for how to test your injected properties. Easey right ? 😎
 
 ## Resources <a name="resources"></a>
+Some helpful links for you:
+* https://developer.apple.com/documentation/swiftui/environment
+* https://www.avanderlee.com/swift/dependency-injection/
+* https://www.avanderlee.com/swift/property-wrappers/
 
 ## Author <a name="conclusion"></a>
 This pacakge was created by [Eng.Omar Elsayed](https://www.linkedin.com/in/engomarelsayed/) to help the iOS comuntity and make there life easir. To contact me email me at eng.omar.elsayed@hotmail.com
