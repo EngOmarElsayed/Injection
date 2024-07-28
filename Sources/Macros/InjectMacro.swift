@@ -29,7 +29,41 @@ public struct InjectMacro: AccessorMacro {
     providingAccessorsOf declaration: some DeclSyntaxProtocol,
     in context: some MacroExpansionContext
   ) throws -> [AccessorDeclSyntax] {
-    return []
+    guard let varDecl = declaration.as(VariableDeclSyntax.self) else {
+      // Error it should be applied to variables only
+      return []
+    }
+    
+    guard varDecl.bindingSpecifier.text == "var" else {
+      // Error the variable must be var not let
+      return []
+    }
+    
+    guard var binding = varDecl.bindings.first else {
+      // Error
+      return []
+    }
+    
+    guard let _ = binding.initializer else {
+      // Error must have a default value
+      return []
+    }
+    
+    guard var identifier = binding.pattern.as(IdentifierPatternSyntax.self)?.identifier else {
+      // Error doesn't have a name
+      return []
+    }
+    
+    if let isOptionalType = binding.typeAnnotation?.type.is(OptionalTypeSyntax.self), isOptionalType {
+      // Error this mustn't be optional
+      return []
+    }
+    identifier = .identifier(identifier.text.upperCaseFirstLetter())
+    
+    return ["""
+           get { Self[\(identifier)InjectionKey.self] }
+           set { Self[\(identifier)InjectionKey.self] = newValue }
+    """]
   }
 }
 

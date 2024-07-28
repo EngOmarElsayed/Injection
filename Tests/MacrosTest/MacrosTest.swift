@@ -33,7 +33,12 @@ final class MacrosTest: XCTestCase {
 @Inject var test: Test = Test()
 """,
       expandedSource: """
- var test: Test = Test()
+ var test: Test {
+     get {
+         Self [TestInjectionKey.self]
+     }
+            set { Self[TestInjectionKey.self] = newValue }
+ }
  
  private struct TestInjectionKey: InjectionKey {
     static var currentValue: Test = Test()

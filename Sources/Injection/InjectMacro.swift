@@ -20,6 +20,6 @@
 
 import Foundation
 
-@attached(peer, names: prefixed(InjectionKey))
+@attached(peer, names: arbitrary)
 @attached(accessor, names: named(get), named(set))
 public macro Inject() = #externalMacro(module: "Macros", type: "InjectMacro")
