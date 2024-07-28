@@ -20,6 +20,9 @@
 
 import Foundation
 
+@attached(memberAttribute)
+public macro InjecteValues() = #externalMacro(module: "Macros", type: "InjectedValuesContainer")
+
 @attached(peer, names: arbitrary)
 @attached(accessor, names: named(get), named(set))
 public macro Inject() = #externalMacro(module: "Macros", type: "InjectMacro")

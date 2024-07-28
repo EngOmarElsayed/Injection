@@ -21,7 +21,7 @@
 import Foundation
 
 /// Gives you access to the injected dependencies.
-public struct InjectedValues {
+ public struct InjectedValues {
     /// This is only used by the subscript to access the computed property's in the ``InjectedValues`` extension.
     private static var current = InjectedValues()
     

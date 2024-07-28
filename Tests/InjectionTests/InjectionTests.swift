@@ -62,8 +62,6 @@ fileprivate struct NetworkProviderMock: Network {
   }
 }
 
-extension InjectedValues {
-  @Inject fileprivate var networkProvider: Network = NetworkProvider()
+@InjecteValues extension InjectedValues {
+  fileprivate var networkProvider: Network = NetworkProvider()
 }
-
-

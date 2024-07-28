@@ -23,9 +23,41 @@ import SwiftSyntaxMacrosTestSupport
 import Macros
 import XCTest
 
-fileprivate let testMacros: [String: Macro.Type] = [ "Inject" :InjectMacro.self ]
+fileprivate let testMacros: [String: Macro.Type] = [
+  "Inject" : InjectMacro.self,
+  "InjectedValuesContainer": InjectedValuesContainer.self
+]
 
 final class MacrosTest: XCTestCase {
+  
+  func test_InjectedValuesContainer_memberAttribute() {
+    assertMacroExpansion(
+      """
+      @InjectedValuesContainer public struct InjectedValues {
+        var current = ""
+        var test: Test = test()
+      }
+      """,
+      expandedSource: """
+      public struct InjectedValues {
+        var current = ""
+        var test: Test {
+            get {
+                              Self [TestInjectionKey.self]
+                   }
+                   set {
+                     Self[TestInjectionKey.self] = newValue
+                   }
+        }
+
+        private struct TestInjectionKey: InjectionKey {
+           static var currentValue: Test = test()
+        }
+      }
+      """,
+      macros: testMacros
+    )
+  }
   
   func test_InjectMacro_Accessor() {
     assertMacroExpansion(
@@ -35,9 +67,11 @@ final class MacrosTest: XCTestCase {
       expandedSource: """
  var test: Test {
      get {
-         Self [TestInjectionKey.self]
-     }
-            set { Self[TestInjectionKey.self] = newValue }
+                       Self [TestInjectionKey.self]
+            }
+            set {
+              Self[TestInjectionKey.self] = newValue
+            }
  }
  
  private struct TestInjectionKey: InjectionKey {
@@ -47,6 +81,4 @@ final class MacrosTest: XCTestCase {
       macros: testMacros
     )
   }
-  
 }
-
