@@ -54,18 +54,24 @@ struct Ducati: MotorBike {
 }
 ```
 
-At this point we want to inject this object to another object using dependency injection design pattern to do so, the first step is to create a key (like the `@Environment`):
+At this point we want to inject this object to another object using dependency injection design pattern to do so, 
+the first step is to make an extension `InjectedValues` and add the new property that containes the object instance :
 
 ```swift
+@InjecteValues extension InjectedValues {
+  var ducatiProvider: MotorBike = Ducati()
+}
+```
+and that's it...simple right 😉. The `InjecteValues` macro expand the code to this at compile time:
+
+```swift
+@InjecteValues extension InjectedValues {
+  var ducatiProvider: MotorBike = Ducati()
+
+//Expanded Code
 private struct DucatiKey: InjectionKey {
    static var currentValue: MotorBike = Ducati()
 }
-```
-
-Then you will add this key to the `InjectedValues` struct:
-
-```swift
-extension InjectedValues {
     var ducatiProvider: MotorBike {
        get { Self[DucatiKey.self] }
        set { Self[DucatiKey.self] = newValue }
